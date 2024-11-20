@@ -1,4 +1,4 @@
-import { CorsList } from "../models/cors.models";
+import { CorsList } from "../models/cors.model";
 
 /**
  *
@@ -63,26 +63,6 @@ class CorsConfig {
     }
     return credentialsString === "true";
   }
-
-/**
- * 
- * Method to get the TLS configuration for the CORS middleware
- * 
- * @returns string
- */
-protected static getTlsConfig(): string {
-  const corsTLS = process.env.CORS_TLS;
-
-  // Apply value from CORS_TLS to NODE_TLS_REJECT_UNAUTHORIZED and set to 1 if it's not defined
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED = corsTLS || '1'; 
-
-  // alert if it's disabled
-  if (!corsTLS || corsTLS === '0') {
-      console.warn("TLS verification is DISABLED !!. DO NOT USE IN PRODUCTION !!!");
-  }
-
-  return corsTLS || '1';
-}
 
 }
 
