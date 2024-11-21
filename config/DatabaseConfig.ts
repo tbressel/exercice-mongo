@@ -108,7 +108,7 @@ class DatabaseConfig {
    * @returns string
    */
   private static getCdn(): string | undefined {
-    const cdn: string | undefined = process.env.DB_CDN;
+    const cdn: string | undefined = process.env.CDN_MONGO;
     if (cdn === undefined) {
       console.error("No CDN set");
     } else {
