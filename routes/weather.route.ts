@@ -44,23 +44,23 @@ const databaseConfig = DatabaseConfig.getConfig();
 const authDatabase = DatabaseConfig.getAuth();
 
 
-// Construction de l'URI MongoDB (CDN ou local)
+// Build URI MongoDB (CDN or local)
 const mongoURI: string = authDatabase.cdn
   ? `${authDatabase.cdn}/${databaseConfig.name}`
   : `mongodb://${authDatabase.user}:${authDatabase.password}@${databaseConfig.host}:${databaseConfig.port}/${databaseConfig.name}`;
 
-// Création et connexion du client MongoDB
+// client MongoDB creation and conenxion
 const client: MongoClient = new MongoClient(mongoURI);
 
-// Récupération du nom de la base de données
+// get database name
 const databaseName: string | undefined = databaseConfig.name;
 
 (async () => {
   try {
     await client.connect();
-    console.log(`MongoDB connecté à ${authDatabase.cdn || databaseConfig.host}`);
+    console.log(`MongoDB connected to ${authDatabase.cdn || databaseConfig.host}`);
   } catch (error) {
-    console.error("Erreur MongoDB lors de la connexion initiale :", error);
+    console.error("Ooops MongoDB failed :", error);
   }
 })();
 
@@ -118,8 +118,6 @@ api.post("/send/", (req: Request, res: Response) => {
 });
 
 
-
-
 ////////////////////////////////////////////////////////////////////
 //////////   GET CITIES AND TEMPERATURES FROM DATABASE   ///////////
 ////////////////////////////////////////////////////////////////////
@@ -149,7 +147,6 @@ api.get("/get/", (req: Request, res: Response) => {
     }
   })();
 });
-
 
 
 ///////////////////////////////////////////////////////////////////////
