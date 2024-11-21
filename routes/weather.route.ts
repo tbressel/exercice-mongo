@@ -98,21 +98,21 @@ api.post("/send/", (req: Request, res: Response) => {
 
 
 
-////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
 //////////   GET CITIES AND TEMPERATURES FROM DATABASE   ///////////
-////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
 
 api.get("/get/", (req: Request, res: Response) => {
   (async () => {
     try {
       await client.connect();
-      console.log(`MongoDB OK`);
+     
 
       const db: Db = client.db("exercice-mongo");
       const usersCollection: Collection<SendWeather> = db.collection("weather");
 
       const result = await usersCollection.find().toArray();
-      console.log("Ville ajoutée avec ID :", result);
+      // console.log("Liste de toutes les Villes :", result);
 
       res.status(200).json({
         result: result,
@@ -127,5 +127,41 @@ api.get("/get/", (req: Request, res: Response) => {
     }
   })();
 });
+
+
+
+///////////////////////////////////////////////////////////////////////
+//////////   DELETE CITIES AND TEMPERATURES FROM DATABASE   ///////////
+///////////////////////////////////////////////////////////////////////
+
+api.delete("/delete/", (req: Request, res: Response) => {
+
+
+  console.log("ID reçu :", req.query.id);
+
+  (async () => {
+    try {
+      await client.connect();
+
+      const db: Db = client.db("exercice-mongo");
+      const usersCollection: Collection<SendWeather> = db.collection("weather");
+
+      const result = await usersCollection.deleteOne();
+
+      res.status(200).json({
+        result: result,
+      });
+      return;
+
+    } catch (error) {
+      console.error("Erreur MongoDB :", error);
+
+    } finally {
+      await client.close();
+    }
+  })();
+});
+
+
 
 export default api;
