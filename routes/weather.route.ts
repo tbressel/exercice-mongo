@@ -39,12 +39,30 @@ api.use(jsonParserMiddleware);
 import validator from "validator";
 
 import { MongoClient, Db, Collection } from "mongodb";
-const mongoURI: string = "mongodb://127.0.0.1:27017";
+
+const databaseConfig = DatabaseConfig.getConfig();
+const authDatabase = DatabaseConfig.getAuth();
+
+
+// Construction de l'URI MongoDB (CDN ou local)
+const mongoURI: string = authDatabase.cdn
+  ? `${authDatabase.cdn}/${databaseConfig.name}`
+  : `mongodb://${authDatabase.user}:${authDatabase.password}@${databaseConfig.host}:${databaseConfig.port}/${databaseConfig.name}`;
+
+// Création et connexion du client MongoDB
 const client: MongoClient = new MongoClient(mongoURI);
 
+// Récupération du nom de la base de données
+const databaseName: string | undefined = databaseConfig.name;
 
-
-const databaseName: string | undefined = DatabaseConfig.getConfig().name;
+(async () => {
+  try {
+    await client.connect();
+    console.log(`MongoDB connecté à ${authDatabase.cdn || databaseConfig.host}`);
+  } catch (error) {
+    console.error("Erreur MongoDB lors de la connexion initiale :", error);
+  }
+})();
 
 ////////////////////////////////////////////////////////////////
 //////////   SEND CITY AND TEMPERATURE TO DATABASE   ///////////

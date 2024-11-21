@@ -40,18 +40,17 @@ api.listen(configPort, () => {
 });
 
 // get database configuration from DatabaseConfig
-// Configuration de la base de données
 const configDatabase: DatabaseModel = DatabaseConfig.getConfig();
 const authDatabase: DatabaseAuthModel = DatabaseConfig.getAuth();
 
-// Construction de l'URI MongoDB
+// Build URI connexion
 let mongoURI: string;
 
 if (authDatabase.cdn) {
-    // Utilisez directement le CDN fourni
+    // cdn connexion
     mongoURI = `${authDatabase.cdn}/${configDatabase.name}`;
 } else {
-    // Connexion locale ou personnalisée
+    // cdn connexion
     mongoURI = `mongodb://${authDatabase.user}:${authDatabase.password}@${configDatabase.host}:${configDatabase.port}/${configDatabase.name}`;
 }
 
@@ -63,18 +62,17 @@ if (authDatabase.cdn) {
 ////////   CONNEXION À LA BASE DE DONNÉES /////
 ///////////////////////////////////////////////
 
-// Initialisation du client MongoDB
+// Mongodb client initialization
 const client: MongoClient = new MongoClient(mongoURI);
 
 (async () => {
   try {
       console.log("Connecting to MongoDB...");
       await client.connect();
-      console.log(`MongoDB connecté avec succès à ${authDatabase.cdn || configDatabase.host}`);
+      console.log(`MongoDB connected to ${authDatabase.cdn || configDatabase.host}`);
   } catch (error) {
-      console.error('Erreur de connexion MongoDB :', error);
+      console.error('Ooops MongoDB failed :', error);
   } finally {
-      // Note : Vous pouvez laisser le client connecté en fonction de votre application
       await client.close();
   }
 })();
