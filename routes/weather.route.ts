@@ -4,6 +4,9 @@
 
 // Types importation
 import { SendWeather } from "../models/weather.model";
+import { DatabaseModel } from "../models/database.model";
+
+import DatabaseConfig from "../config/DatabaseConfig";
 
 // EXPRESS JS (importation & definition)
 import express, { Express, Request, Response } from "express";
@@ -41,6 +44,8 @@ const client: MongoClient = new MongoClient(mongoURI);
 
 
 
+const databaseName: string | undefined = DatabaseConfig.getConfig().name;
+
 ////////////////////////////////////////////////////////////////
 //////////   SEND CITY AND TEMPERATURE TO DATABASE   ///////////
 ////////////////////////////////////////////////////////////////
@@ -66,9 +71,8 @@ api.post("/send/", (req: Request, res: Response) => {
   (async () => {
     try {
       await client.connect();
-      console.log(`MongoDB OK`);
 
-      const db: Db = client.db("exercice-mongo");
+      const db: Db = client.db(databaseName);
       const usersCollection: Collection<SendWeather> = db.collection("weather");
 
       const result = await usersCollection.insertOne({
@@ -108,7 +112,7 @@ api.get("/get/", (req: Request, res: Response) => {
       await client.connect();
      
 
-      const db: Db = client.db("exercice-mongo");
+      const db: Db = client.db(databaseName);
       const usersCollection: Collection<SendWeather> = db.collection("weather");
 
       const result = await usersCollection.find().toArray();
@@ -143,7 +147,7 @@ api.delete("/delete/", (req: Request, res: Response) => {
     try {
       await client.connect();
 
-      const db: Db = client.db("exercice-mongo");
+      const db: Db = client.db(databaseName);
       const usersCollection: Collection<SendWeather> = db.collection("weather");
 
       const result = await usersCollection.deleteOne();
